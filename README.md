@@ -1,2 +1,2 @@
 # dataset-vacancies
-A synthetic scattering dataset with diffuse scattering from size-effect correlations around vacancies in a simple cubic structure.
+This repo serves as the datafiles for the `nxs_analysis_tools.datasets.vacancies` method in the `nxs_analysis_tools.datasets` submodule.
