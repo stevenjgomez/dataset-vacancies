@@ -1,0 +1,29 @@
+fourier
+  xray
+  ll -5.0,-5.0,-5.0
+  lr 5.0,-5.0,-5.0
+  ul -5.0,5.0,-5.0
+  tl -5.0,-5.0,5.0
+  na $2*5.0+1.0
+  no $3*5.0+1.0
+  nt $4*5.0+1.0
+  abs  h
+  ord  k
+  top  l
+  temp use
+  disp off
+  
+  set aver,0
+  lots off
+
+  !set aver,50                 # Calculate average structure scattering using 50% of the crystal
+  !lots box,30,30,1,50,yes 
+  
+  run
+exit
+output
+  outfile $1.nxs
+  value   inte
+  form    hdf5
+  run
+exit

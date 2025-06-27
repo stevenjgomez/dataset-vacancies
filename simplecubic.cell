@@ -1,0 +1,5 @@
+title simplecubic
+spcgr P1
+cell  5.0, 5.0, 5.0, 90, 90, 90
+atoms x,            y,            z,            Biso,    Property,  MoleNo,  MoleAt,  Occ
+CU    0.00000000,   0.00000000,   0.00000000,   0.0001,  1,         0,       0,       1.0

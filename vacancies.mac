@@ -1,0 +1,87 @@
+#####################################################
+#
+# vacancies.mac
+# ###############
+#
+# This script loads a simple cubic cell of Cu
+# and generates a 20x20x20 supercell.
+# 
+# Vacancies are randomly generated at 3% of
+# the copper sites.
+#
+# At each vacancy site, nearest neighbor atoms 
+# are displaced by 15% of the lattice parameter
+# towards the vacancy to model local relaxation.
+#
+#####################################################
+
+
+# Reset all parameters
+reset
+
+# Enter into the discus section
+discus
+	
+	# Read the unit cell and generate a 20x20x20 supercell
+	read
+		cell simplecubic.cell, 20, 20,20
+
+	@plot no_vacancies_initial
+	wait 
+	
+	# Enter into the chem submenu
+	chem
+		# Set Monte Carlo mode to quick, without periodic boundary conditions
+		set mode, quick, noperiodic
+	exit
+
+	# Randomly replace Cu on site 1 with a VOID with 3% probability
+	replace Cu, VOID, 1, 0.03
+
+	# Generate a simple 2D plot of the *randomly* disordered supercell
+	# (the @ symbol finds/runs a script called `plot.mac`)
+	@plot vacancies_initial
+	wait
+
+	# This variable r[1] stores the % displacement in lattice units
+	# r[1] is a real-type variable
+	r[1] = 0.15
+
+	# A "do" loop (for loop) iterates over all sites
+	# i[1] is an integer-type variable, used as the index for the loop
+	# n[1] is the total number of atoms
+	do i[1]=1,n[1]
+
+		# m[i] gives the atom type at site i
+		# 0 = VOID, 1 = Cu, etc.
+		# If the atom type at site i[1] is equal to 0 (VOID) then...
+		if(m[i[1]].eq.0) then
+
+			# Find environment of nearest neighbor Cu atoms
+			# around the coordinate x[i],y[i],z[i]
+			# within the range 1.0 to 5.5 Angstroms
+			find env, Cu, x[i[1]],y[i[1]],z[i[1]], 1.0,5.5
+
+			# Loop over all atoms within the environment
+			# Use a new indexing variable, i[2]
+			do i[2]=1,env[0]
+
+				# Modify the coordinates of the nearest neighbor atoms
+				x[env[i[2]]]=x[env[i[2]]]-r[1]*(x[env[i[2]]]-x[i[1]])
+				y[env[i[2]]]=y[env[i[2]]]-r[1]*(y[env[i[2]]]-y[i[1]])
+				z[env[i[2]]]=z[env[i[2]]]-r[1]*(z[env[i[2]]]-z[i[1]])
+			enddo
+
+		endif
+
+	enddo
+
+	# Create a simple 2D plot of the relaxed structure
+	@plot vacancies_relaxed
+	wait
+
+	# Simulate the scattering and save to `vacancies.nxs`
+	# Supercell dimensions are used to determine binning
+	@fourier vacancies, 20, 20, 20
+
+exit
